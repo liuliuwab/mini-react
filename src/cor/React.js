@@ -19,11 +19,17 @@ function createElement(type, props, ...children) {
 }
 function render(virtualDom, container){
     const dom = virtualDom.type === 'TEXT_ELEMENT'?document.createTextNode(virtualDom.props.nodeValue):document.createElement(virtualDom.type)
-    Object.keys(container).forEach((child)=>{
-        virtualDom[child] = virtualDom[child]
+    Object.keys(virtualDom.props).forEach((key)=>{
+        if(key !== "children"){
+            dom[key] = virtualDom.props[key]
+        }
     })
-    virtualDom.props.children.forEach((child)=>render(child, dom))
-    container.appendChild(dom);
+    if(virtualDom.props.children.length !== 0){
+        virtualDom.props.children.forEach((child)=>{
+            render(child, dom)
+        })
+    }
+    container.append(dom)
 }
 
 const React = {
